@@ -1,10 +1,17 @@
 # MenuBarCalendar
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![macOS](https://img.shields.io/badge/macOS-13%2B-blue)](https://www.apple.com/macos/)
+[![Swift](https://img.shields.io/badge/Swift-5.9%2B-orange)](https://swift.org)
+[![Release](https://img.shields.io/github/v/release/junhey/MenuBarCalendar)](https://github.com/junhey/MenuBarCalendar/releases)
+[![CI](https://github.com/junhey/MenuBarCalendar/actions/workflows/ci.yml/badge.svg)](https://github.com/junhey/MenuBarCalendar/actions/workflows/ci.yml)
+[![Stars](https://img.shields.io/github/stars/junhey/MenuBarCalendar?style=social)](https://github.com/junhey/MenuBarCalendar)
+
 [中文文档](README.zh-CN.md)
 
 A lightweight macOS menu bar calendar built with SwiftUI `MenuBarExtra` (macOS 13+). Click the menu bar item to open a calendar panel with lunar calendar support, solar terms, festival countdowns, and a customizable digital clock.
 
-**Current version: 0.0.2**
+**Current version: 0.0.3**
 
 ## Project Overview
 
@@ -50,7 +57,18 @@ Design principles:
 - **macOS 13.0** (Ventura) or later
 - **Xcode 16+** recommended for building from source
 
-## Build & Run
+## Install
+
+### From GitHub Releases (recommended)
+
+1. Open the [Releases](https://github.com/junhey/MenuBarCalendar/releases) page.
+2. Download `MenuBarCalendar-v0.0.3.zip` from the latest release.
+3. Unzip and drag `MenuBarCalendar.app` to **Applications** (or `~/Applications`).
+4. Launch the app — it appears in the menu bar (no Dock icon).
+
+> macOS may block apps from unidentified developers. If needed, right-click the app → **Open** → confirm.
+
+### Build from Source
 
 ```bash
 cd MenuBarCalendar
@@ -69,7 +87,7 @@ xcodebuild -project MenuBarCalendar.xcodeproj \
   build
 ```
 
-## Install to Applications
+Install the built app:
 
 ```bash
 cp -R build/DerivedData/Build/Products/Release/MenuBarCalendar.app ~/Applications/
@@ -120,12 +138,13 @@ xcodebuild -project MenuBarCalendar.xcodeproj -scheme MenuBarCalendar test
 
 See [CHANGELOG.md](CHANGELOG.md) for release notes:
 
+- [v0.0.3](https://github.com/junhey/MenuBarCalendar/releases/tag/v0.0.3) — open-source polish, CI, GitHub Releases distribution
 - [v0.0.2](https://github.com/junhey/MenuBarCalendar/releases/tag/v0.0.2) — streamlined UI, native Settings `Form`, smaller binary
 - [v0.0.1](https://github.com/junhey/MenuBarCalendar/releases/tag/v0.0.1) — initial release with voice announcements and lunar calendar
 
 ## Contributing
 
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) before opening a pull request.
 
 ## License
 

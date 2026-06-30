@@ -38,7 +38,7 @@ Please use [GitHub Issues](https://github.com/junhey/MenuBarCalendar/issues) and
 
 ## Code of Conduct
 
-Be respectful and constructive. We aim for a welcoming environment for all contributors.
+Please read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Be respectful and constructive — we aim for a welcoming environment for all contributors.
 
 ---
 
