@@ -18,41 +18,38 @@ struct LeftPanelView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Spacer(minLength: 12)
+            Spacer(minLength: 8)
 
             Text(timeString)
-                .font(.system(size: 56, weight: .thin, design: .rounded))
+                .font(.system(size: 52, weight: .ultraLight, design: .rounded))
                 .monospacedDigit()
                 .foregroundStyle(.primary)
-                .padding(.bottom, 2)
+                .padding(.bottom, 4)
 
             Text(viewModel.dayDetail.gregorian)
-                .font(.system(size: 16, weight: .medium))
+                .font(.system(size: 15, weight: .medium))
                 .foregroundStyle(.primary)
 
-            HStack(spacing: 10) {
-                Label(viewModel.dayDetail.weekday, systemImage: "calendar")
+            HStack(spacing: 8) {
+                Text(viewModel.dayDetail.weekday)
+                Text("·")
+                    .foregroundStyle(.quaternary)
                 Text("第 \(viewModel.dayDetail.weekOfYear) 周")
             }
             .font(.system(size: 12))
             .foregroundStyle(.secondary)
-            .padding(.top, 6)
+            .padding(.top, 4)
 
             Divider()
-                .opacity(0.5)
-                .padding(.vertical, 16)
+                .opacity(0.35)
+                .padding(.vertical, 18)
 
-            HStack(spacing: 8) {
-                Text("周起始")
-                    .font(.system(size: 11))
-                    .foregroundStyle(.tertiary)
-                PillToggle(title: "周一", isSelected: settings.weekStartsOnMonday) {
-                    settings.weekStartsOnMonday = true
-                }
-                PillToggle(title: "周日", isSelected: !settings.weekStartsOnMonday) {
-                    settings.weekStartsOnMonday = false
-                }
+            Picker("周起始", selection: $settings.weekStartsOnMonday) {
+                Text("周一").tag(true)
+                Text("周日").tag(false)
             }
+            .pickerStyle(.segmented)
+            .labelsHidden()
 
             GlassCard {
                 DayDetailCard(
@@ -61,24 +58,28 @@ struct LeftPanelView: View {
                     onCopy: viewModel.copySelectedDate
                 )
             }
-            .padding(.top, 14)
+            .padding(.top, 16)
 
             if viewModel.copiedFeedback {
                 Text("已复制到剪贴板")
                     .font(.system(size: 10))
                     .foregroundStyle(AppTheme.accent)
-                    .padding(.top, 4)
+                    .padding(.top, 6)
             }
 
-            VStack(alignment: .leading, spacing: 8) {
-                if let solar = viewModel.nextSolarTerm {
-                    CountdownRow(info: solar)
+            if settings.showUpcomingFestivals || viewModel.nextSolarTerm != nil {
+                VStack(alignment: .leading, spacing: 6) {
+                    if let solar = viewModel.nextSolarTerm {
+                        CountdownRow(info: solar)
+                    }
+                    if settings.showUpcomingFestivals {
+                        ForEach(viewModel.upcomingFestivals, id: \.targetDate) { festival in
+                            CountdownRow(info: festival, compact: true)
+                        }
+                    }
                 }
-                ForEach(viewModel.upcomingFestivals, id: \.targetDate) { festival in
-                    CountdownRow(info: festival, compact: true)
-                }
+                .padding(.top, 14)
             }
-            .padding(.top, 12)
 
             Spacer()
 
@@ -86,8 +87,7 @@ struct LeftPanelView: View {
                 Button("今天") {
                     viewModel.goToToday()
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(AppTheme.accent)
+                .buttonStyle(.bordered)
                 .controlSize(.small)
                 .keyboardShortcut("t", modifiers: .command)
 
@@ -95,10 +95,10 @@ struct LeftPanelView: View {
 
                 SettingsGearButton()
             }
-            .padding(.bottom, 6)
+            .padding(.bottom, 4)
         }
-        .padding(.horizontal, 24)
-        .padding(.vertical, 20)
+        .padding(.horizontal, 22)
+        .padding(.vertical, 18)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .background(AppTheme.sidebarBackground)
     }

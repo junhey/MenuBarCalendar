@@ -18,13 +18,13 @@ struct MonthGridView: View {
     }
 
     var body: some View {
-        VStack(spacing: 14) {
+        VStack(spacing: 12) {
             HStack {
                 Button(action: viewModel.previousMonth) {
                     Image(systemName: "chevron.left")
-                        .font(.system(size: 11, weight: .semibold))
-                        .frame(width: 28, height: 28)
-                        .background(Circle().fill(Color.primary.opacity(0.05)))
+                        .font(.system(size: 10, weight: .semibold))
+                        .frame(width: 26, height: 26)
+                        .background(Circle().fill(Color.primary.opacity(0.04)))
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(.secondary)
@@ -34,29 +34,28 @@ struct MonthGridView: View {
                 Spacer()
 
                 Text(monthTitle)
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(.primary)
 
                 Spacer()
 
                 Button(action: viewModel.nextMonth) {
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 11, weight: .semibold))
-                        .frame(width: 28, height: 28)
-                        .background(Circle().fill(Color.primary.opacity(0.05)))
+                        .font(.system(size: 10, weight: .semibold))
+                        .frame(width: 26, height: 26)
+                        .background(Circle().fill(Color.primary.opacity(0.04)))
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(.secondary)
                 .help("下个月 (→)")
                 .keyboardShortcut(.rightArrow, modifiers: [])
             }
-            .padding(.horizontal, 2)
 
             HStack(spacing: 4) {
                 Text("周")
                     .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(.tertiary)
-                    .frame(width: 26)
+                    .foregroundStyle(.quaternary)
+                    .frame(width: 24)
 
                 ForEach(weekdaySymbols, id: \.self) { symbol in
                     Text(symbol)
@@ -72,7 +71,7 @@ struct MonthGridView: View {
                     Text("\(data.weekNumbers.indices.contains(index) ? data.weekNumbers[index] : 0)")
                         .font(.system(size: 9, weight: .medium, design: .rounded))
                         .foregroundStyle(.quaternary)
-                        .frame(width: 26)
+                        .frame(width: 24)
 
                     ForEach(0..<7, id: \.self) { col in
                         if let day = week.indices.contains(col) ? week[col] : nil {
@@ -86,7 +85,7 @@ struct MonthGridView: View {
                                 viewModel.copySelectedDate()
                             }
                         } else {
-                            Color.clear.frame(maxWidth: .infinity, minHeight: 48)
+                            Color.clear.frame(maxWidth: .infinity, minHeight: 46)
                         }
                     }
                 }
@@ -94,8 +93,8 @@ struct MonthGridView: View {
 
             Spacer(minLength: 0)
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 18)
+        .padding(.horizontal, 18)
+        .padding(.vertical, 16)
     }
 }
 
@@ -107,9 +106,9 @@ private struct DayCellView: View {
 
     var body: some View {
         Button(action: onTap) {
-            VStack(spacing: 3) {
+            VStack(spacing: 2) {
                 Text("\(day.dayNumber)")
-                    .font(.system(size: 14, weight: day.isToday ? .bold : .medium, design: .rounded))
+                    .font(.system(size: 14, weight: day.isToday ? .semibold : .regular, design: .rounded))
                     .foregroundStyle(dayTextColor)
 
                 Text(day.festivalLabel ?? day.lunarLabel)
@@ -117,13 +116,13 @@ private struct DayCellView: View {
                     .lineLimit(1)
                     .foregroundStyle(subLabelColor)
             }
-            .frame(maxWidth: .infinity, minHeight: 48)
+            .frame(maxWidth: .infinity, minHeight: 46)
             .background(background)
-            .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: AppTheme.cellCornerRadius, style: .continuous))
             .overlay {
                 if day.isHoliday && day.isCurrentMonth && !day.isToday {
-                    RoundedRectangle(cornerRadius: 9, style: .continuous)
-                        .strokeBorder(AppTheme.holidayGreen.opacity(0.35), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: AppTheme.cellCornerRadius, style: .continuous)
+                        .strokeBorder(AppTheme.holidayGreen.opacity(0.30), lineWidth: 0.5)
                 }
             }
         }
@@ -143,23 +142,22 @@ private struct DayCellView: View {
     }
 
     private var subLabelColor: Color {
-        if day.isToday { return .white.opacity(0.88) }
-        if day.festivalLabel != nil && day.isCurrentMonth { return AppTheme.holidayGreen.opacity(0.9) }
+        if day.isToday { return .white.opacity(0.85) }
+        if day.festivalLabel != nil && day.isCurrentMonth { return AppTheme.holidayGreen.opacity(0.85) }
         if !day.isCurrentMonth { return AppTheme.mutedDay }
-        return .secondary.opacity(0.85)
+        return .secondary.opacity(0.8)
     }
 
     @ViewBuilder
     private var background: some View {
         if day.isToday {
-            RoundedRectangle(cornerRadius: 9, style: .continuous)
+            RoundedRectangle(cornerRadius: AppTheme.cellCornerRadius, style: .continuous)
                 .fill(AppTheme.accent)
-                .shadow(color: AppTheme.accent.opacity(0.25), radius: 4, y: 2)
         } else if isSelected {
-            RoundedRectangle(cornerRadius: 9, style: .continuous)
+            RoundedRectangle(cornerRadius: AppTheme.cellCornerRadius, style: .continuous)
                 .fill(AppTheme.accentSoft)
         } else if day.isHoliday && day.isCurrentMonth {
-            RoundedRectangle(cornerRadius: 9, style: .continuous)
+            RoundedRectangle(cornerRadius: AppTheme.cellCornerRadius, style: .continuous)
                 .fill(AppTheme.holidayGreenSoft)
         } else {
             Color.clear

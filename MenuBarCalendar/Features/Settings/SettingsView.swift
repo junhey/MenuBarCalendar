@@ -5,7 +5,7 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
-            Section("菜单栏显示") {
+            Section {
                 Toggle("仅显示图标", isOn: $settings.useIconOnly)
 
                 if !settings.useIconOnly {
@@ -21,23 +21,11 @@ struct SettingsView: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
-
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 140))], spacing: 8) {
-                        ForEach(MenuBarDisplayMode.presets.filter { $0 != .custom }) { mode in
-                            Button {
-                                settings.displayMode = mode
-                            } label: {
-                                Text(mode.displayName)
-                                    .font(.system(size: 11))
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 6)
-                            }
-                            .buttonStyle(.bordered)
-                            .tint(settings.displayMode == mode ? AppTheme.accent : .secondary)
-                        }
-                    }
-                    .padding(.vertical, 4)
                 }
+
+                MenuBarPreviewRow(settings: settings)
+            } header: {
+                Text("菜单栏显示")
             }
 
             Section("时间格式") {
@@ -68,21 +56,42 @@ struct SettingsView: View {
                     Text("右键日期").foregroundStyle(.secondary)
                 }
             }
-
-            Section("预览") {
-                HStack {
-                    Text("菜单栏预览")
-                    Spacer()
-                    MenuBarLabelView(settings: settings, now: .now)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 5)
-                        .background(Color(nsColor: .controlBackgroundColor))
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
-                }
-            }
         }
         .formStyle(.grouped)
-        .frame(width: 460, height: 520)
-        .padding()
+        .frame(width: 440, height: 480)
+    }
+}
+
+// MARK: - Menu Bar Preview
+
+private struct MenuBarPreviewRow: View {
+    @ObservedObject var settings: UserSettings
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("菜单栏预览")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+
+            HStack {
+                Spacer()
+                MenuBarLabelView(settings: settings, now: .now)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                Spacer()
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(Color(nsColor: .windowBackgroundColor))
+                    .shadow(color: .black.opacity(0.06), radius: 1, y: 1)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .strokeBorder(Color.primary.opacity(0.06), lineWidth: 0.5)
+            )
+        }
+        .padding(.top, 4)
     }
 }

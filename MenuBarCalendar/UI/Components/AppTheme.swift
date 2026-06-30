@@ -2,16 +2,16 @@ import SwiftUI
 
 enum AppTheme {
     static let accent = Color.accentColor
-    static let accentSoft = Color.accentColor.opacity(0.14)
-    static let holidayGreen = Color(red: 0.20, green: 0.68, blue: 0.42)
-    static let holidayGreenSoft = Color(red: 0.20, green: 0.68, blue: 0.42).opacity(0.12)
+    static let accentSoft = Color.accentColor.opacity(0.12)
+    static let holidayGreen = Color(red: 0.22, green: 0.65, blue: 0.42)
+    static let holidayGreenSoft = Color(red: 0.22, green: 0.65, blue: 0.42).opacity(0.10)
 
     static var panelBackground: Color {
         Color(nsColor: .windowBackgroundColor)
     }
 
     static var sidebarBackground: Color {
-        Color(nsColor: .controlBackgroundColor).opacity(0.55)
+        Color(nsColor: .controlBackgroundColor).opacity(0.45)
     }
 
     static var cardBackground: Color {
@@ -19,13 +19,16 @@ enum AppTheme {
     }
 
     static let subtleText = Color.secondary
-    static let mutedDay = Color.secondary.opacity(0.4)
-    static let cardShadow = Color.black.opacity(0.06)
+    static let mutedDay = Color.secondary.opacity(0.38)
+    static let cardShadow = Color.black.opacity(0.05)
 
-    static let panelCornerRadius: CGFloat = 18
+    static let panelCornerRadius: CGFloat = 16
     static let panelWidth: CGFloat = 720
     static let panelHeight: CGFloat = 440
-    static let sidebarWidth: CGFloat = 280
+    static let sidebarWidth: CGFloat = 272
+
+    static let cardCornerRadius: CGFloat = 10
+    static let cellCornerRadius: CGFloat = 8
 }
 
 struct GlassCard<Content: View>: View {
@@ -37,34 +40,16 @@ struct GlassCard<Content: View>: View {
 
     var body: some View {
         content
-            .padding(.horizontal, 12)
-            .padding(.vertical, 10)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
             .background(
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(AppTheme.cardBackground.opacity(0.85))
-                    .shadow(color: AppTheme.cardShadow, radius: 4, y: 2)
+                RoundedRectangle(cornerRadius: AppTheme.cardCornerRadius, style: .continuous)
+                    .fill(AppTheme.cardBackground.opacity(0.7))
             )
-    }
-}
-
-struct PillToggle: View {
-    let title: String
-    let isSelected: Bool
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Text(title)
-                .font(.system(size: 11, weight: .medium))
-                .padding(.horizontal, 11)
-                .padding(.vertical, 5)
-                .background(
-                    Capsule()
-                        .fill(isSelected ? AppTheme.accent : Color.primary.opacity(0.06))
-                )
-                .foregroundStyle(isSelected ? .white : .secondary)
-        }
-        .buttonStyle(.plain)
+            .overlay(
+                RoundedRectangle(cornerRadius: AppTheme.cardCornerRadius, style: .continuous)
+                    .strokeBorder(Color.primary.opacity(0.05), lineWidth: 0.5)
+            )
     }
 }
 
@@ -75,8 +60,8 @@ struct CountdownRow: View {
     var body: some View {
         HStack(spacing: 8) {
             Circle()
-                .fill(AppTheme.accent.opacity(0.85))
-                .frame(width: 5, height: 5)
+                .fill(AppTheme.accent.opacity(0.7))
+                .frame(width: 4, height: 4)
 
             Text(info.title)
                 .font(.system(size: compact ? 11 : 12))
@@ -86,7 +71,7 @@ struct CountdownRow: View {
             Spacer(minLength: 4)
 
             Text("\(info.daysRemaining) 天")
-                .font(.system(size: compact ? 11 : 12, weight: .semibold, design: .rounded))
+                .font(.system(size: compact ? 11 : 12, weight: .medium, design: .rounded))
                 .foregroundStyle(AppTheme.accent)
                 .monospacedDigit()
         }
@@ -99,12 +84,13 @@ struct DayDetailCard: View {
     let onCopy: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 5) {
             HStack {
                 Text(isToday ? "今日" : "选中日期")
-                    .font(.system(size: 10, weight: .semibold))
+                    .font(.system(size: 10, weight: .medium))
                     .foregroundStyle(.tertiary)
                     .textCase(.uppercase)
+                    .tracking(0.3)
 
                 Spacer()
 
@@ -113,7 +99,7 @@ struct DayDetailCard: View {
                         .font(.system(size: 11))
                 }
                 .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.tertiary)
                 .help("复制日期")
             }
 

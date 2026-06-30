@@ -14,7 +14,7 @@ struct CalendarPanelView: View {
                 .frame(width: AppTheme.sidebarWidth)
 
             Divider()
-                .opacity(0.4)
+                .opacity(0.3)
 
             MonthGridView(viewModel: viewModel, settings: settings)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -25,6 +25,6 @@ struct CalendarPanelView: View {
                 .fill(.regularMaterial)
         }
         .clipShape(RoundedRectangle(cornerRadius: AppTheme.panelCornerRadius, style: .continuous))
-        .shadow(color: AppTheme.cardShadow, radius: 28, y: 10)
+        .shadow(color: AppTheme.cardShadow, radius: 24, y: 8)
     }
 }
