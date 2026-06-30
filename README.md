@@ -1,35 +1,38 @@
 # MenuBarCalendar
 
-macOS 菜单栏日历应用，基于 SwiftUI `MenuBarExtra`（macOS 13+）构建。点击菜单栏即可查看精美日历面板，支持农历、节气、节日倒计时与高度可定制的时间显示。
+macOS 菜单栏日历应用，基于 SwiftUI `MenuBarExtra`（macOS 13+）构建。点击菜单栏即可查看日历面板，支持农历、节气、节日倒计时与可定制的数码时间显示。
 
-**当前版本：0.0.1**
+**当前版本：0.0.2**
+
+## 设计理念
+
+- **精简**：只保留核心能力，去掉花哨选项，代码与体积尽量小
+- **原生**：设置页使用系统 `Form`，菜单栏用 `MenuBarExtra`，时间格式用 `DateFormatter`
+- **大气**：面板左右分栏、毛玻璃背景、大号轻量数码时钟，视觉干净专业
 
 ## 功能
 
-### 菜单栏与时间
-- **数码 / 指针样式**：数码为默认文字时间；指针样式在菜单栏显示时钟图标，面板内展示模拟表盘
-- **时间制式**：12 / 24 小时制
-- **显示秒钟**、**显示上午/下午**（12 小时制）
-- **闪动分隔符**：冒号每秒交替透明度，类似 macOS 系统时钟
-- **多种显示预设**：仅时间、时间+日期、时间+星期、农历等，支持自定义 `DateFormatter` 格式
-- **仅图标模式**：菜单栏只显示日历图标
+### 菜单栏
+- 数码时间显示，支持 12 / 24 小时制、秒钟、上午/下午
+- 多种显示预设：仅时间、时间+日期、时间+星期、农历等
+- 自定义 `DateFormatter` 格式
+- 仅图标模式
 
 ### 日历面板
-- 左右分栏布局，层次清晰
-- 左侧：大号时间（数码/指针）、公历/农历、周数、周起始日、节气/节日倒计时
-- 右侧：月历网格（周数列、农历/节日标注、今日高亮、节假日绿色标记）
+- 左侧：大号数码时钟、公历/农历详情、周起始切换、节气/节日倒计时
+- 右侧：月历网格（周数、农历/节日标注、今日高亮、节假日标记）
+- 复制日期、回到今天（⌘T）
 
 ### 语音报时
-- 开关控制，支持整点 / 每 30 分钟 / 每 15 分钟
-- 使用 `NSSpeechSynthesizer` 中文播报当前时间
-
-### 设置
-- macOS 系统设置风格：分组卡片、行分隔、右侧控件对齐
-- 底部「完成」按钮关闭设置窗口
-- 关于页显示版本号
+- 可选开启，支持整点 / 每 30 分钟 / 每 15 分钟
+- 系统 `NSSpeechSynthesizer` 中文播报
 
 ### 农历引擎
 - 1900–2100 年农历转换、干支生肖、二十四节气、传统节日
+
+## 截图
+
+> 截图占位：菜单栏预览、日历面板、设置页（待补充）
 
 ## 系统要求
 
@@ -40,6 +43,7 @@ macOS 菜单栏日历应用，基于 SwiftUI `MenuBarExtra`（macOS 13+）构建
 
 ```bash
 cd MenuBarCalendar
+python3 generate_xcodeproj.py   # 若修改了源文件列表
 open MenuBarCalendar.xcodeproj
 # 在 Xcode 中选择 MenuBarCalendar scheme，⌘R 运行
 ```
@@ -60,20 +64,16 @@ open ~/Applications/MenuBarCalendar.app
 xcodebuild -project MenuBarCalendar.xcodeproj -scheme MenuBarCalendar test
 ```
 
-## 设置说明
+## 设置
 
-打开 **设置**（应用内左下角齿轮按钮，或菜单栏 `MenuBarCalendar` → `设置`，快捷键 ⌘,）：
+打开 **设置**（面板左下角齿轮，或菜单栏 `MenuBarCalendar` → `设置`，快捷键 ⌘,）：
 
-| 分组 | 选项 | 说明 |
-|------|------|------|
-| 时间显示 | 数码 / 指针 | 菜单栏与面板时间样式 |
-| 时间显示 | 时间制式 | 12 / 24 小时制 |
-| 时间显示 | 显示上午/下午 | 12 小时制下是否显示 |
-| 时间显示 | 闪动分隔符 | 冒号每秒闪动 |
-| 时间显示 | 显示秒钟 | 是否显示秒 |
-| 菜单栏 | 显示内容 | 多种预设或自定义格式 |
-| 日历 | 周起始日 | 周一或周日 |
-| 语音报时 | 启用 / 间隔 | 整点或定间隔中文播报 |
+| 分组 | 选项 |
+|------|------|
+| 时间显示 | 时间制式、上午/下午、秒钟 |
+| 菜单栏 | 显示内容、自定义格式、预览 |
+| 日历 | 周起始日、节日倒计时 |
+| 语音报时 | 开关、报时间隔 |
 
 设置保存在 `UserDefaults`，立即生效。
 
@@ -82,25 +82,19 @@ xcodebuild -project MenuBarCalendar.xcodeproj -scheme MenuBarCalendar test
 ```
 MenuBarCalendar/
 ├── MenuBarCalendar/
-│   ├── MenuBarCalendarApp.swift      # 应用入口、MenuBarExtra
+│   ├── MenuBarCalendarApp.swift      # 应用入口、MenuBarExtra、Settings
 │   ├── Core/
 │   │   ├── Models/                   # 数据模型
 │   │   ├── Services/                 # 时钟、农历、格式化、语音报时
 │   │   └── Settings/                 # UserSettings
 │   ├── Features/
-│   │   ├── MenuBar/                  # 菜单栏标签视图
-│   │   ├── CalendarPanel/            # 弹窗面板 UI + ViewModel
-│   │   └── Settings/                 # 设置界面
-│   └── UI/Components/                # 主题、系统设置风格组件
-├── MenuBarCalendarTests/             # 单元测试
+│   │   ├── MenuBar/                  # 菜单栏标签
+│   │   ├── CalendarPanel/            # 弹窗面板
+│   │   └── Settings/                 # 设置（Form）
+│   └── UI/Components/                # 主题与面板组件
+├── MenuBarCalendarTests/
 └── MenuBarCalendar.xcodeproj
 ```
-
-## 架构说明
-
-- **分层**：`Core`（纯逻辑）→ `Features`（UI + ViewModel）→ `App`（组合根）
-- **可测试**：农历引擎、日历网格、菜单栏格式化、中文报时均有单元测试
-- **可扩展**：新增节日/设置项只需扩展 `HolidayCatalog` 或 `UserSettings`
 
 ## 许可证
 

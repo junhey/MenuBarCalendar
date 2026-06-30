@@ -51,20 +51,17 @@ final class MenuBarFormatterTests: XCTestCase {
         settings.displayMode = .timeOnly
         settings.timeFormat = .hour24
         settings.showSeconds = false
-        settings.menuBarTimeStyle = .digital
-        settings.blinkTimeSeparator = false
         let formatter = MenuBarFormatter(settings: settings)
         let result = formatter.format(date: Date(timeIntervalSince1970: 0))
         XCTAssertFalse(result.text.isEmpty)
     }
 
-    func testBlinkingSeparatorSegments() {
+    func testTimeDateWeekdayFormat() {
         let settings = UserSettings.shared
-        settings.displayMode = .timeOnly
+        settings.displayMode = .timeDateWeekday
         settings.timeFormat = .hour24
         settings.showSeconds = false
-        settings.blinkTimeSeparator = true
-        settings.menuBarTimeStyle = .digital
+        settings.useIconOnly = false
 
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(identifier: "Asia/Shanghai")!
@@ -76,19 +73,16 @@ final class MenuBarFormatterTests: XCTestCase {
         components.minute = 30
         let date = calendar.date(from: components)!
 
-        let result = MenuBarFormatter(settings: settings, calendar: calendar).format(date: date)
-        XCTAssertNotNil(result.timeSegments)
-        XCTAssertTrue(result.timeSegments!.contains { $0.isBlinkingSeparator })
+        let result = MenuBarFormatter(settings: settings).format(date: date)
+        XCTAssertTrue(result.text.contains("15:30"))
+        XCTAssertTrue(result.text.contains("6月30日"))
     }
 
-    func testAnalogStyleUsesIcon() {
+    func testIconOnlyReturnsEmptyText() {
         let settings = UserSettings.shared
-        settings.displayMode = .timeOnly
-        settings.menuBarTimeStyle = .analog
-        settings.useIconOnly = false
-
+        settings.useIconOnly = true
         let result = MenuBarFormatter(settings: settings).format(date: .now)
-        XCTAssertTrue(result.usesAnalogIcon)
+        XCTAssertTrue(result.text.isEmpty)
     }
 }
 

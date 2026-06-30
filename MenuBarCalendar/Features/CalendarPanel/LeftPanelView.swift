@@ -8,7 +8,11 @@ struct LeftPanelView: View {
         VStack(alignment: .leading, spacing: 0) {
             Spacer(minLength: 8)
 
-            PanelTimeDisplay(settings: settings, now: viewModel.now)
+            Text(panelTimeString)
+                .font(.system(size: 52, weight: .ultraLight, design: .rounded))
+                .monospacedDigit()
+                .foregroundStyle(.primary)
+                .padding(.bottom, 4)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(viewModel.dayDetail.gregorian)
@@ -24,7 +28,6 @@ struct LeftPanelView: View {
                 .font(.system(size: 12))
                 .foregroundStyle(.secondary)
             }
-            .padding(.top, settings.menuBarTimeStyle == .analog ? 4 : 0)
 
             Divider()
                 .opacity(0.35)
@@ -102,5 +105,24 @@ struct LeftPanelView: View {
         .padding(.vertical, 18)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .background(AppTheme.sidebarBackground)
+    }
+
+    private var panelTimeString: String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "zh_CN")
+        formatter.dateFormat = panelTimePattern()
+        return formatter.string(from: viewModel.now)
+    }
+
+    private func panelTimePattern() -> String {
+        switch settings.timeFormat {
+        case .hour24:
+            return settings.showSeconds ? "HH:mm:ss" : "HH:mm"
+        case .hour12:
+            if settings.showAMPM {
+                return settings.showSeconds ? "h:mm:ss a" : "h:mm a"
+            }
+            return settings.showSeconds ? "h:mm:ss" : "h:mm"
+        }
     }
 }
