@@ -1,101 +1,136 @@
 # MenuBarCalendar
 
-macOS 菜单栏日历应用，基于 SwiftUI `MenuBarExtra`（macOS 13+）构建。点击菜单栏即可查看日历面板，支持农历、节气、节日倒计时与可定制的数码时间显示。
+[中文文档](README.zh-CN.md)
 
-**当前版本：0.0.2**
+A lightweight macOS menu bar calendar built with SwiftUI `MenuBarExtra` (macOS 13+). Click the menu bar item to open a calendar panel with lunar calendar support, solar terms, festival countdowns, and a customizable digital clock.
 
-## 设计理念
+**Current version: 0.0.2**
 
-- **精简**：只保留核心能力，去掉花哨选项，代码与体积尽量小
-- **原生**：设置页使用系统 `Form`，菜单栏用 `MenuBarExtra`，时间格式用 `DateFormatter`
-- **大气**：面板左右分栏、毛玻璃背景、大号轻量数码时钟，视觉干净专业
+## Project Overview
 
-## 功能
+MenuBarCalendar lives in the menu bar (no Dock icon) and focuses on three things: a readable clock in the menu bar, a rich calendar popover, and sensible defaults with minimal configuration.
 
-### 菜单栏
-- 数码时间显示，支持 12 / 24 小时制、秒钟、上午/下午
-- 多种显示预设：仅时间、时间+日期、时间+星期、农历等
-- 自定义 `DateFormatter` 格式
-- 仅图标模式
+Design principles:
 
-### 日历面板
-- 左侧：大号数码时钟、公历/农历详情、周起始切换、节气/节日倒计时
-- 右侧：月历网格（周数、农历/节日标注、今日高亮、节假日标记）
-- 复制日期、回到今天（⌘T）
+- **Minimal** — core features only; small codebase and binary footprint
+- **Native** — system `Form` for Settings, `MenuBarExtra` for the menu bar, `DateFormatter` for time display
+- **Clean** — split calendar panel, frosted background, large lightweight digital clock
 
-### 语音报时
-- 可选开启，支持整点 / 每 30 分钟 / 每 15 分钟
-- 系统 `NSSpeechSynthesizer` 中文播报
+## Features
 
-### 农历引擎
-- 1900–2100 年农历转换、干支生肖、二十四节气、传统节日
+### Menu Bar
 
-## 截图
+- Digital time display with 12/24-hour format, seconds, and AM/PM
+- Display presets: time only, time + date, time + weekday, time + lunar date, and more
+- Custom `DateFormatter` format strings
+- Icon-only mode
 
-> 截图占位：菜单栏预览、日历面板、设置页（待补充）
+### Calendar Panel
 
-## 系统要求
+- **Left panel:** large digital clock, Gregorian/Lunar details, week-start toggle, solar-term and festival countdown
+- **Right panel:** month grid with week numbers, lunar/festival labels, today highlight, holiday markers
+- Copy date, jump to today (⌘T)
 
-- macOS 13.0 或更高版本
-- Xcode 16+（推荐）
+### Voice Announcements
 
-## 构建与运行
+- Optional Chinese time announcements via `NSSpeechSynthesizer`
+- Intervals: hourly, every 30 minutes, or every 15 minutes
+
+### Lunar Calendar Engine
+
+- Gregorian ↔ Lunar conversion for 1900–2100
+- Heavenly stems, earthly branches, zodiac, 24 solar terms, traditional festivals
+
+## Screenshots
+
+> Placeholder — add screenshots of the menu bar preview, calendar panel, and Settings window.
+
+## Requirements
+
+- **macOS 13.0** (Ventura) or later
+- **Xcode 16+** recommended for building from source
+
+## Build & Run
 
 ```bash
 cd MenuBarCalendar
-python3 generate_xcodeproj.py   # 若修改了源文件列表
+python3 generate_xcodeproj.py   # only if you changed the source file list
 open MenuBarCalendar.xcodeproj
-# 在 Xcode 中选择 MenuBarCalendar scheme，⌘R 运行
+# Select the MenuBarCalendar scheme in Xcode, then press ⌘R
 ```
 
-或使用命令行 Release 构建：
+Command-line Release build:
 
 ```bash
-xcodebuild -project MenuBarCalendar.xcodeproj -scheme MenuBarCalendar -configuration Release -derivedDataPath build/DerivedData build
+xcodebuild -project MenuBarCalendar.xcodeproj \
+  -scheme MenuBarCalendar \
+  -configuration Release \
+  -derivedDataPath build/DerivedData \
+  build
+```
+
+## Install to Applications
+
+```bash
 cp -R build/DerivedData/Build/Products/Release/MenuBarCalendar.app ~/Applications/
 open ~/Applications/MenuBarCalendar.app
 ```
 
-运行后应用图标出现在菜单栏（无 Dock 图标）。点击即可展开日历面板。
+After launch, the app icon appears in the menu bar. Click it to open the calendar panel.
 
-## 运行测试
+## Settings
+
+Open **Settings** from the gear icon in the panel footer, or **MenuBarCalendar → Settings** (⌘,):
+
+| Section | Options |
+|---------|---------|
+| Time Display | 12/24-hour, AM/PM, seconds |
+| Menu Bar | Display content, custom format, live preview |
+| Calendar | Week starts on Monday, upcoming festival countdown |
+| Voice | Enable announcements, interval |
+
+Preferences are stored in `UserDefaults` and apply immediately.
+
+## Architecture
+
+```
+MenuBarCalendar/
+├── MenuBarCalendar/
+│   ├── MenuBarCalendarApp.swift      # App entry, MenuBarExtra, Settings
+│   ├── Core/
+│   │   ├── Models/                   # Data models
+│   │   ├── Services/                 # Clock, lunar, formatting, voice
+│   │   └── Settings/                 # UserSettings
+│   ├── Features/
+│   │   ├── MenuBar/                  # Menu bar label
+│   │   ├── CalendarPanel/            # Popover panel
+│   │   └── Settings/                 # Settings (Form)
+│   └── UI/Components/                # Theme and panel components
+├── MenuBarCalendarTests/
+└── MenuBarCalendar.xcodeproj
+```
+
+## Tests
 
 ```bash
 xcodebuild -project MenuBarCalendar.xcodeproj -scheme MenuBarCalendar test
 ```
 
-## 设置
+## Changelog
 
-打开 **设置**（面板左下角齿轮，或菜单栏 `MenuBarCalendar` → `设置`，快捷键 ⌘,）：
+See [CHANGELOG.md](CHANGELOG.md) for release notes:
 
-| 分组 | 选项 |
-|------|------|
-| 时间显示 | 时间制式、上午/下午、秒钟 |
-| 菜单栏 | 显示内容、自定义格式、预览 |
-| 日历 | 周起始日、节日倒计时 |
-| 语音报时 | 开关、报时间隔 |
+- [v0.0.2](https://github.com/junhey/MenuBarCalendar/releases/tag/v0.0.2) — streamlined UI, native Settings `Form`, smaller binary
+- [v0.0.1](https://github.com/junhey/MenuBarCalendar/releases/tag/v0.0.1) — initial release with voice announcements and lunar calendar
 
-设置保存在 `UserDefaults`，立即生效。
+## Contributing
 
-## 项目结构
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
-```
-MenuBarCalendar/
-├── MenuBarCalendar/
-│   ├── MenuBarCalendarApp.swift      # 应用入口、MenuBarExtra、Settings
-│   ├── Core/
-│   │   ├── Models/                   # 数据模型
-│   │   ├── Services/                 # 时钟、农历、格式化、语音报时
-│   │   └── Settings/                 # UserSettings
-│   ├── Features/
-│   │   ├── MenuBar/                  # 菜单栏标签
-│   │   ├── CalendarPanel/            # 弹窗面板
-│   │   └── Settings/                 # 设置（Form）
-│   └── UI/Components/                # 主题与面板组件
-├── MenuBarCalendarTests/
-└── MenuBarCalendar.xcodeproj
-```
+## License
 
-## 许可证
+This project is licensed under the [MIT License](LICENSE).
 
-MIT
+## Contributors
+
+- [junhey](https://github.com/junhey) — project maintainer
