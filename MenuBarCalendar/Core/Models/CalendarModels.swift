@@ -36,6 +36,19 @@ struct DayDetail: Equatable {
     let isHoliday: Bool
 }
 
+struct MenuBarTimeSegment: Equatable {
+    let text: String
+    let isBlinkingSeparator: Bool
+}
+
 struct MenuBarFormattedText: Equatable {
     let text: String
+    let timeSegments: [MenuBarTimeSegment]?
+    let usesAnalogIcon: Bool
+
+    init(text: String, timeSegments: [MenuBarTimeSegment]? = nil, usesAnalogIcon: Bool = false) {
+        self.text = text
+        self.timeSegments = timeSegments
+        self.usesAnalogIcon = usesAnalogIcon
+    }
 }

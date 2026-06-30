@@ -55,9 +55,13 @@ struct AppSettingsCommands14: Commands {
 struct MenuBarRootView: View {
     @ObservedObject var clock: ClockService
     @ObservedObject var settings: UserSettings
+    @StateObject private var voiceService = VoiceAnnouncementService()
 
     var body: some View {
         CalendarPanelView(clock: clock)
             .onAppear { clock.start() }
+            .onReceive(clock.$now) { now in
+                voiceService.handleTick(now: now, settings: settings)
+            }
     }
 }

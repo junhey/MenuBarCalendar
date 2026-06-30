@@ -45,6 +45,36 @@ enum TimeFormat: String, CaseIterable, Identifiable, Codable {
     }
 }
 
+enum MenuBarTimeStyle: String, CaseIterable, Identifiable, Codable {
+    case digital
+    case analog
+
+    var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .digital: return "数码"
+        case .analog: return "指针"
+        }
+    }
+}
+
+enum VoiceAnnouncementInterval: Int, CaseIterable, Identifiable, Codable {
+    case hourly = 60
+    case every30Minutes = 30
+    case every15Minutes = 15
+
+    var id: Int { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .hourly: return "整点"
+        case .every30Minutes: return "每 30 分钟"
+        case .every15Minutes: return "每 15 分钟"
+        }
+    }
+}
+
 final class UserSettings: ObservableObject {
     static let shared = UserSettings()
 
@@ -56,6 +86,11 @@ final class UserSettings: ObservableObject {
         static let showSeconds = "showSeconds"
         static let useIconOnly = "useIconOnly"
         static let showUpcomingFestivals = "showUpcomingFestivals"
+        static let showAMPM = "showAMPM"
+        static let blinkTimeSeparator = "blinkTimeSeparator"
+        static let menuBarTimeStyle = "menuBarTimeStyle"
+        static let voiceAnnouncementEnabled = "voiceAnnouncementEnabled"
+        static let voiceAnnouncementInterval = "voiceAnnouncementInterval"
     }
 
     @Published var displayMode: MenuBarDisplayMode {
@@ -86,6 +121,26 @@ final class UserSettings: ObservableObject {
         didSet { UserDefaults.standard.set(showUpcomingFestivals, forKey: Keys.showUpcomingFestivals) }
     }
 
+    @Published var showAMPM: Bool {
+        didSet { UserDefaults.standard.set(showAMPM, forKey: Keys.showAMPM) }
+    }
+
+    @Published var blinkTimeSeparator: Bool {
+        didSet { UserDefaults.standard.set(blinkTimeSeparator, forKey: Keys.blinkTimeSeparator) }
+    }
+
+    @Published var menuBarTimeStyle: MenuBarTimeStyle {
+        didSet { UserDefaults.standard.set(menuBarTimeStyle.rawValue, forKey: Keys.menuBarTimeStyle) }
+    }
+
+    @Published var voiceAnnouncementEnabled: Bool {
+        didSet { UserDefaults.standard.set(voiceAnnouncementEnabled, forKey: Keys.voiceAnnouncementEnabled) }
+    }
+
+    @Published var voiceAnnouncementInterval: VoiceAnnouncementInterval {
+        didSet { UserDefaults.standard.set(voiceAnnouncementInterval.rawValue, forKey: Keys.voiceAnnouncementInterval) }
+    }
+
     private init() {
         let defaults = UserDefaults.standard
         displayMode = MenuBarDisplayMode(
@@ -97,5 +152,13 @@ final class UserSettings: ObservableObject {
         showSeconds = defaults.object(forKey: Keys.showSeconds) as? Bool ?? false
         useIconOnly = defaults.object(forKey: Keys.useIconOnly) as? Bool ?? false
         showUpcomingFestivals = defaults.object(forKey: Keys.showUpcomingFestivals) as? Bool ?? true
+        showAMPM = defaults.object(forKey: Keys.showAMPM) as? Bool ?? true
+        blinkTimeSeparator = defaults.object(forKey: Keys.blinkTimeSeparator) as? Bool ?? false
+        menuBarTimeStyle = MenuBarTimeStyle(
+            rawValue: defaults.string(forKey: Keys.menuBarTimeStyle) ?? ""
+        ) ?? .digital
+        voiceAnnouncementEnabled = defaults.object(forKey: Keys.voiceAnnouncementEnabled) as? Bool ?? false
+        let intervalRaw = defaults.object(forKey: Keys.voiceAnnouncementInterval) as? Int ?? VoiceAnnouncementInterval.hourly.rawValue
+        voiceAnnouncementInterval = VoiceAnnouncementInterval(rawValue: intervalRaw) ?? .hourly
     }
 }

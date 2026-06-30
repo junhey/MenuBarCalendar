@@ -4,52 +4,46 @@ struct LeftPanelView: View {
     @ObservedObject var viewModel: CalendarPanelViewModel
     @ObservedObject var settings: UserSettings
 
-    private var timeString: String {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "zh_CN")
-        switch settings.timeFormat {
-        case .hour24:
-            formatter.dateFormat = settings.showSeconds ? "HH:mm:ss" : "HH:mm"
-        case .hour12:
-            formatter.dateFormat = settings.showSeconds ? "h:mm:ss a" : "h:mm a"
-        }
-        return formatter.string(from: viewModel.now)
-    }
-
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             Spacer(minLength: 8)
 
-            Text(timeString)
-                .font(.system(size: 52, weight: .ultraLight, design: .rounded))
-                .monospacedDigit()
-                .foregroundStyle(.primary)
-                .padding(.bottom, 4)
+            PanelTimeDisplay(settings: settings, now: viewModel.now)
 
-            Text(viewModel.dayDetail.gregorian)
-                .font(.system(size: 15, weight: .medium))
-                .foregroundStyle(.primary)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(viewModel.dayDetail.gregorian)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(.primary)
 
-            HStack(spacing: 8) {
-                Text(viewModel.dayDetail.weekday)
-                Text("·")
-                    .foregroundStyle(.quaternary)
-                Text("第 \(viewModel.dayDetail.weekOfYear) 周")
+                HStack(spacing: 8) {
+                    Text(viewModel.dayDetail.weekday)
+                    Text("·")
+                        .foregroundStyle(.quaternary)
+                    Text("第 \(viewModel.dayDetail.weekOfYear) 周")
+                }
+                .font(.system(size: 12))
+                .foregroundStyle(.secondary)
             }
-            .font(.system(size: 12))
-            .foregroundStyle(.secondary)
-            .padding(.top, 4)
+            .padding(.top, settings.menuBarTimeStyle == .analog ? 4 : 0)
 
             Divider()
                 .opacity(0.35)
-                .padding(.vertical, 18)
+                .padding(.vertical, 16)
 
-            Picker("周起始", selection: $settings.weekStartsOnMonday) {
-                Text("周一").tag(true)
-                Text("周日").tag(false)
+            VStack(alignment: .leading, spacing: 8) {
+                Text("周起始")
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(.tertiary)
+                    .textCase(.uppercase)
+                    .tracking(0.3)
+
+                Picker("周起始", selection: $settings.weekStartsOnMonday) {
+                    Text("周一").tag(true)
+                    Text("周日").tag(false)
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
             }
-            .pickerStyle(.segmented)
-            .labelsHidden()
 
             GlassCard {
                 DayDetailCard(
@@ -58,7 +52,7 @@ struct LeftPanelView: View {
                     onCopy: viewModel.copySelectedDate
                 )
             }
-            .padding(.top, 16)
+            .padding(.top, 14)
 
             if viewModel.copiedFeedback {
                 Text("已复制到剪贴板")
@@ -69,6 +63,13 @@ struct LeftPanelView: View {
 
             if settings.showUpcomingFestivals || viewModel.nextSolarTerm != nil {
                 VStack(alignment: .leading, spacing: 6) {
+                    Text("即将到来")
+                        .font(.system(size: 10, weight: .medium))
+                        .foregroundStyle(.tertiary)
+                        .textCase(.uppercase)
+                        .tracking(0.3)
+                        .padding(.bottom, 2)
+
                     if let solar = viewModel.nextSolarTerm {
                         CountdownRow(info: solar)
                     }
