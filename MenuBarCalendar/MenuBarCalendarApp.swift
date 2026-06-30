@@ -12,9 +12,42 @@ struct MenuBarCalendarApp: App {
             MenuBarLabelView(settings: settings, now: clock.now)
         }
         .menuBarExtraStyle(.window)
+        .commands {
+            AppCommands()
+        }
 
         Settings {
             SettingsView()
+        }
+    }
+}
+
+struct AppCommands: Commands {
+    var body: some Commands {
+        if #available(macOS 14.0, *) {
+            AppSettingsCommands14()
+        } else {
+            CommandGroup(replacing: .appSettings) {
+                Button("设置…") {
+                    SettingsPresenter.show()
+                }
+                .keyboardShortcut(",", modifiers: .command)
+            }
+        }
+    }
+}
+
+@available(macOS 14.0, *)
+struct AppSettingsCommands14: Commands {
+    @Environment(\.openSettings) private var openSettings
+
+    var body: some Commands {
+        CommandGroup(replacing: .appSettings) {
+            Button("设置…") {
+                NSApp.activate(ignoringOtherApps: true)
+                openSettings()
+            }
+            .keyboardShortcut(",", modifiers: .command)
         }
     }
 }

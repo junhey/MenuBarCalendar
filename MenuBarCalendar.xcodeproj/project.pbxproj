@@ -15,6 +15,7 @@
 		42632D2F97174633808D0881 /* ClockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750A21DB5BAD4688AECC8B74 /* ClockService.swift */; };
 		0B0678DC350D4C4C8FD1CBAD /* LunarCalendarEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215AAC278CB8445EAB2032B9 /* LunarCalendarEngine.swift */; };
 		B6465F4FE558405B938F922E /* MenuBarFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF380E0979894B38AD3085FE /* MenuBarFormatter.swift */; };
+		A1B2C3D4E5F6478990ABCDEF /* SettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C3D4E5F6A7489901BCDEF0 /* SettingsPresenter.swift */; };
 		062FA47B3E954BD293800640 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A91DC436162442FBF686E8B /* SettingsView.swift */; };
 		0A2A3E136A8140B498B0EF9F /* CalendarPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1077C6D7761C4404B47BED17 /* CalendarPanelView.swift */; };
 		4F3339069CAC4C088261C176 /* CalendarPanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3631C0FEC3904B8FAAF36570 /* CalendarPanelViewModel.swift */; };
@@ -48,6 +49,7 @@
 		750A21DB5BAD4688AECC8B74 /* ClockService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/ClockService.swift; sourceTree = "<group>"; };
 		215AAC278CB8445EAB2032B9 /* LunarCalendarEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/LunarCalendarEngine.swift; sourceTree = "<group>"; };
 		EF380E0979894B38AD3085FE /* MenuBarFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/MenuBarFormatter.swift; sourceTree = "<group>"; };
+		B2C3D4E5F6A7489901BCDEF0 /* SettingsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/SettingsPresenter.swift; sourceTree = "<group>"; };
 		1A91DC436162442FBF686E8B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Settings/SettingsView.swift; sourceTree = "<group>"; };
 		1077C6D7761C4404B47BED17 /* CalendarPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/CalendarPanel/CalendarPanelView.swift; sourceTree = "<group>"; };
 		3631C0FEC3904B8FAAF36570 /* CalendarPanelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/CalendarPanel/CalendarPanelViewModel.swift; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 				750A21DB5BAD4688AECC8B74 /* ClockService.swift */,
 				215AAC278CB8445EAB2032B9 /* LunarCalendarEngine.swift */,
 				EF380E0979894B38AD3085FE /* MenuBarFormatter.swift */,
+				B2C3D4E5F6A7489901BCDEF0 /* SettingsPresenter.swift */,
 				4AF774F1D29144F9943BC1ED /* UserSettings.swift */,
 				1077C6D7761C4404B47BED17 /* CalendarPanelView.swift */,
 				3631C0FEC3904B8FAAF36570 /* CalendarPanelViewModel.swift */,
@@ -226,6 +229,7 @@
 				42632D2F97174633808D0881 /* ClockService.swift in Sources */,
 				0B0678DC350D4C4C8FD1CBAD /* LunarCalendarEngine.swift in Sources */,
 				B6465F4FE558405B938F922E /* MenuBarFormatter.swift in Sources */,
+				A1B2C3D4E5F6478990ABCDEF /* SettingsPresenter.swift in Sources */,
 				062FA47B3E954BD293800640 /* SettingsView.swift in Sources */,
 				0A2A3E136A8140B498B0EF9F /* CalendarPanelView.swift in Sources */,
 				4F3339069CAC4C088261C176 /* CalendarPanelViewModel.swift in Sources */,

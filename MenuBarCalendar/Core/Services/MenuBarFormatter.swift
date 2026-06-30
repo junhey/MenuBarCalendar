@@ -24,8 +24,12 @@ struct MenuBarFormatter {
             text = "\(formatTime(date))  \(formatWeekday(date))"
         case .timeDateWeekday:
             text = "\(formatTime(date))  \(formatDate(date))  \(formatWeekday(date))"
+        case .timeDateLunar:
+            text = "\(formatTime(date))  \(formatDate(date))  \(formatLunar(date))"
         case .dateOnly:
             text = formatDate(date)
+        case .dateWeekday:
+            text = "\(formatDate(date))  \(formatWeekday(date))"
         case .custom:
             text = formatCustom(date)
         }
@@ -56,6 +60,10 @@ struct MenuBarFormatter {
         formatter.locale = Locale(identifier: "zh_CN")
         formatter.dateFormat = "EEE"
         return formatter.string(from: date)
+    }
+
+    private func formatLunar(_ date: Date) -> String {
+        LunarCalendarEngine.lunarShortLabel(for: date)
     }
 
     private func formatCustom(_ date: Date) -> String {

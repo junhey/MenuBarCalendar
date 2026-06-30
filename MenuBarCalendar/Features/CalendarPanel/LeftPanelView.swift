@@ -18,33 +18,34 @@ struct LeftPanelView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Spacer(minLength: 8)
+            Spacer(minLength: 12)
 
             Text(timeString)
-                .font(.system(size: 52, weight: .light, design: .rounded))
+                .font(.system(size: 56, weight: .thin, design: .rounded))
                 .monospacedDigit()
                 .foregroundStyle(.primary)
-                .padding(.bottom, 4)
+                .padding(.bottom, 2)
 
             Text(viewModel.dayDetail.gregorian)
-                .font(.system(size: 15, weight: .medium))
+                .font(.system(size: 16, weight: .medium))
                 .foregroundStyle(.primary)
 
-            HStack(spacing: 12) {
+            HStack(spacing: 10) {
                 Label(viewModel.dayDetail.weekday, systemImage: "calendar")
                 Text("第 \(viewModel.dayDetail.weekOfYear) 周")
             }
             .font(.system(size: 12))
             .foregroundStyle(.secondary)
-            .padding(.top, 4)
+            .padding(.top, 6)
 
             Divider()
-                .padding(.vertical, 14)
+                .opacity(0.5)
+                .padding(.vertical, 16)
 
             HStack(spacing: 8) {
                 Text("周起始")
-                    .font(.system(size: 12))
-                    .foregroundStyle(.secondary)
+                    .font(.system(size: 11))
+                    .foregroundStyle(.tertiary)
                 PillToggle(title: "周一", isSelected: settings.weekStartsOnMonday) {
                     settings.weekStartsOnMonday = true
                 }
@@ -53,54 +54,51 @@ struct LeftPanelView: View {
                 }
             }
 
-            VStack(alignment: .leading, spacing: 8) {
-                Text(viewModel.dayDetail.lunarFull)
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(AppTheme.accent)
-
-                if let term = viewModel.dayDetail.solarTerm {
-                    Text("今日节气 · \(term)")
-                        .font(.system(size: 12))
-                        .foregroundStyle(.secondary)
-                }
+            GlassCard {
+                DayDetailCard(
+                    detail: viewModel.dayDetail,
+                    isToday: viewModel.isSelectedToday,
+                    onCopy: viewModel.copySelectedDate
+                )
             }
             .padding(.top, 14)
 
-            VStack(alignment: .leading, spacing: 6) {
+            if viewModel.copiedFeedback {
+                Text("已复制到剪贴板")
+                    .font(.system(size: 10))
+                    .foregroundStyle(AppTheme.accent)
+                    .padding(.top, 4)
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
                 if let solar = viewModel.nextSolarTerm {
                     CountdownRow(info: solar)
                 }
-                if let festival = viewModel.nextFestival {
-                    CountdownRow(info: festival)
+                ForEach(viewModel.upcomingFestivals, id: \.targetDate) { festival in
+                    CountdownRow(info: festival, compact: true)
                 }
             }
             .padding(.top, 12)
 
             Spacer()
 
-            HStack {
+            HStack(spacing: 10) {
                 Button("今天") {
                     viewModel.goToToday()
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(AppTheme.accent)
                 .controlSize(.small)
+                .keyboardShortcut("t", modifiers: .command)
 
                 Spacer()
 
-                Button {
-                    NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-                } label: {
-                    Image(systemName: "gearshape")
-                }
-                .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
-                .help("设置")
+                SettingsGearButton()
             }
-            .padding(.bottom, 4)
+            .padding(.bottom, 6)
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 16)
+        .padding(.horizontal, 24)
+        .padding(.vertical, 20)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .background(AppTheme.sidebarBackground)
     }

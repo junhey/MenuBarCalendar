@@ -163,6 +163,11 @@ enum LunarCalendarEngine {
     }
 
     static func nextFestival(from date: Date, calendar: Calendar = .current) -> CountdownInfo? {
+        guard let info = upcomingFestivals(from: date, limit: 1, calendar: calendar).first else { return nil }
+        return CountdownInfo(title: "距\(info.title)", daysRemaining: info.daysRemaining, targetDate: info.targetDate)
+    }
+
+    static func upcomingFestivals(from date: Date, limit: Int = 3, calendar: Calendar = .current) -> [CountdownInfo] {
         let year = calendar.component(.year, from: date)
         var candidates: [(String, Date)] = []
         for y in year...(year + 1) {
@@ -172,9 +177,17 @@ enum LunarCalendarEngine {
                 }
             }
         }
-        guard let next = candidates.sorted(by: { $0.1 < $1.1 }).first else { return nil }
-        let days = calendar.dateComponents([.day], from: calendar.startOfDay(for: date), to: calendar.startOfDay(for: next.1)).day ?? 0
-        return CountdownInfo(title: "距\(next.0)", daysRemaining: max(days, 0), targetDate: next.1)
+        return candidates
+            .sorted(by: { $0.1 < $1.1 })
+            .prefix(limit)
+            .map { next in
+                let days = calendar.dateComponents(
+                    [.day],
+                    from: calendar.startOfDay(for: date),
+                    to: calendar.startOfDay(for: next.1)
+                ).day ?? 0
+                return CountdownInfo(title: next.0, daysRemaining: max(days, 0), targetDate: next.1)
+            }
     }
 
     static func festivalLabel(for date: Date, calendar: Calendar = .current) -> String? {
@@ -327,5 +340,16 @@ enum HolidayCatalog {
         Holiday(name: "重阳节", kind: .lunar(month: 9, day: 9), isPublicHoliday: false),
         Holiday(name: "腊八", kind: .lunar(month: 12, day: 8), isPublicHoliday: false),
         Holiday(name: "除夕", kind: .lunar(month: 12, day: 30), isPublicHoliday: true),
+        Holiday(name: "情人节", kind: .solar(month: 2, day: 14), isPublicHoliday: false),
+        Holiday(name: "妇女节", kind: .solar(month: 3, day: 8), isPublicHoliday: false),
+        Holiday(name: "植树节", kind: .solar(month: 3, day: 12), isPublicHoliday: false),
+        Holiday(name: "520", kind: .solar(month: 5, day: 20), isPublicHoliday: false),
+        Holiday(name: "儿童节", kind: .solar(month: 6, day: 1), isPublicHoliday: false),
+        Holiday(name: "建党节", kind: .solar(month: 7, day: 1), isPublicHoliday: false),
+        Holiday(name: "建军节", kind: .solar(month: 8, day: 1), isPublicHoliday: false),
+        Holiday(name: "教师节", kind: .solar(month: 9, day: 10), isPublicHoliday: false),
+        Holiday(name: "万圣节", kind: .solar(month: 10, day: 31), isPublicHoliday: false),
+        Holiday(name: "平安夜", kind: .solar(month: 12, day: 24), isPublicHoliday: false),
+        Holiday(name: "圣诞节", kind: .solar(month: 12, day: 25), isPublicHoliday: false),
     ]
 }

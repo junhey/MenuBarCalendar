@@ -1,9 +1,11 @@
 import SwiftUI
+import AppKit
 
 @MainActor
 final class CalendarPanelViewModel: ObservableObject {
     @Published var displayedMonth: Date = .now
     @Published var selectedDate: Date = .now
+    @Published var copiedFeedback = false
 
     private let settings: UserSettings
     private let clock: ClockService
@@ -27,12 +29,21 @@ final class CalendarPanelViewModel: ObservableObject {
         engine.dayDetail(for: selectedDate)
     }
 
+    var isSelectedToday: Bool {
+        Calendar.current.isDate(selectedDate, inSameDayAs: now)
+    }
+
     var nextSolarTerm: CountdownInfo? {
         LunarCalendarEngine.nextSolarTerm(from: now)
     }
 
     var nextFestival: CountdownInfo? {
         LunarCalendarEngine.nextFestival(from: now)
+    }
+
+    var upcomingFestivals: [CountdownInfo] {
+        guard settings.showUpcomingFestivals else { return [] }
+        return LunarCalendarEngine.upcomingFestivals(from: now, limit: 3)
     }
 
     func goToToday() {
@@ -52,6 +63,20 @@ final class CalendarPanelViewModel: ObservableObject {
         selectedDate = date
         if !Calendar.current.isDate(date, equalTo: displayedMonth, toGranularity: .month) {
             displayedMonth = date
+        }
+    }
+
+    func copySelectedDate() {
+        let detail = dayDetail
+        var lines = [detail.gregorian, detail.weekday, detail.lunarFull]
+        if let festival = detail.festival { lines.append(festival) }
+        if let term = detail.solarTerm { lines.append("节气：\(term)") }
+        let text = lines.joined(separator: " · ")
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(text, forType: .string)
+        copiedFeedback = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
+            self?.copiedFeedback = false
         }
     }
 }

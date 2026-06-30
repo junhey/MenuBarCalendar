@@ -11,16 +11,20 @@ struct CalendarPanelView: View {
     var body: some View {
         HStack(spacing: 0) {
             LeftPanelView(viewModel: viewModel, settings: settings)
-                .frame(width: 260)
+                .frame(width: AppTheme.sidebarWidth)
 
             Divider()
+                .opacity(0.4)
 
             MonthGridView(viewModel: viewModel, settings: settings)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .frame(width: AppTheme.panelWidth, height: AppTheme.panelHeight)
-        .background(AppTheme.panelBackground)
+        .background {
+            RoundedRectangle(cornerRadius: AppTheme.panelCornerRadius, style: .continuous)
+                .fill(.regularMaterial)
+        }
         .clipShape(RoundedRectangle(cornerRadius: AppTheme.panelCornerRadius, style: .continuous))
-        .shadow(color: AppTheme.cardShadow, radius: 24, y: 8)
+        .shadow(color: AppTheme.cardShadow, radius: 28, y: 10)
     }
 }

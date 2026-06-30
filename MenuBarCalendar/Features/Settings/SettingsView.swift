@@ -10,7 +10,7 @@ struct SettingsView: View {
 
                 if !settings.useIconOnly {
                     Picker("显示内容", selection: $settings.displayMode) {
-                        ForEach(MenuBarDisplayMode.allCases) { mode in
+                        ForEach(MenuBarDisplayMode.presets) { mode in
                             Text(mode.displayName).tag(mode)
                         }
                     }
@@ -21,6 +21,22 @@ struct SettingsView: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
+
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 140))], spacing: 8) {
+                        ForEach(MenuBarDisplayMode.presets.filter { $0 != .custom }) { mode in
+                            Button {
+                                settings.displayMode = mode
+                            } label: {
+                                Text(mode.displayName)
+                                    .font(.system(size: 11))
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 6)
+                            }
+                            .buttonStyle(.bordered)
+                            .tint(settings.displayMode == mode ? AppTheme.accent : .secondary)
+                        }
+                    }
+                    .padding(.vertical, 4)
                 }
             }
 
@@ -35,6 +51,22 @@ struct SettingsView: View {
 
             Section("日历") {
                 Toggle("周起始日为周一", isOn: $settings.weekStartsOnMonday)
+                Toggle("显示近期节日倒计时", isOn: $settings.showUpcomingFestivals)
+            }
+
+            Section("快捷键") {
+                LabeledContent("回到今天") {
+                    Text("⌘ T").foregroundStyle(.secondary)
+                }
+                LabeledContent("打开设置") {
+                    Text("⌘ ,").foregroundStyle(.secondary)
+                }
+                LabeledContent("切换月份") {
+                    Text("← →").foregroundStyle(.secondary)
+                }
+                LabeledContent("复制日期") {
+                    Text("右键日期").foregroundStyle(.secondary)
+                }
             }
 
             Section("预览") {
@@ -42,15 +74,15 @@ struct SettingsView: View {
                     Text("菜单栏预览")
                     Spacer()
                     MenuBarLabelView(settings: settings, now: .now)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
                         .background(Color(nsColor: .controlBackgroundColor))
                         .clipShape(RoundedRectangle(cornerRadius: 6))
                 }
             }
         }
         .formStyle(.grouped)
-        .frame(width: 420, height: 380)
+        .frame(width: 460, height: 520)
         .padding()
     }
 }
